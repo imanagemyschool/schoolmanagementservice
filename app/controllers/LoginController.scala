@@ -27,4 +27,12 @@ class LoginController extends Controller {
         UserManagerImpl.getUserSchoolInfoList(userId.getOrElse(0)).map(userSchoolInfo => Ok(Json.obj("userSchoolInfoList" -> userSchoolInfo)))
     }
 
+    def authenticateUser = Action(parse.json) { implicit request =>
+        val username = (request.body \ "username").as[String]
+        val password = (request.body \ "password").as[String]
+        Logger.info("authenticateUser => username: " + username + ", " + password)
+
+        Ok("ok")
+    }
+
 }

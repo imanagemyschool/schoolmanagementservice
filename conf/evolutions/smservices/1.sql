@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS `smservices`.`Student` (
   `FirstName`               VARCHAR(50)  NOT NULL,
   `MiddleName`              VARCHAR(50),
   `LastName`                VARCHAR(50)  NOT NULL,
+  `Gender`                  VARCHAR(1)   NOT NULL,
   `DateOfBirth`             VARCHAR(32)  NOT NULL,
   `SchoolAdmissionDate`     VARCHAR(32)  NOT NULL,
   `SchoolLeavingDate`       VARCHAR(32),

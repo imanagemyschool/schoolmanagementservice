@@ -32,7 +32,7 @@ object StudentManagerImpl {
         def activeFlag          = column[Boolean]("ActiveFlag")
         def createTime          = column[LocalDateTime]("CreateTime")
 
-        override def * = (studentId, userId, firstName, middleName, lastName, gender, dateOfBirth, schoolAdmissionDate, schoolLeavingDate, parentFullName, guardianFullName, activeFlag, createTime) <> (Student.tupled, Student.unapply)
+        override def * = (studentId, userId, firstName, middleName, lastName, dateOfBirth, gender, schoolAdmissionDate, schoolLeavingDate, parentFullName, guardianFullName, activeFlag, createTime) <> (Student.tupled, Student.unapply)
     }
 
     // Define the Student Address Table
@@ -49,8 +49,8 @@ object StudentManagerImpl {
         def zip                 = column[Option[String]]("Zip")
         def primaryContactPhoneNumber   = column[Option[String]]("PrimaryContactPhoneNumber")
         def secondaryContactPhoneNumber = column[Option[String]]("SecondaryContactPhoneNumber")
-        def primaryEmailAddress         = column[Option[String]]("PrimaryEmailAddress")
-        def secondaryEmailAddress       = column[Option[String]]("SecondaryEmailAddress")
+        def primaryEmailAddress         = column[Option[String]]("PrimaryContactEmailAddress")
+        def secondaryEmailAddress       = column[Option[String]]("SecondaryContactEmailAddress")
         def addressTypeCode     = column[Option[String]]("AddressTypeCode")
         def createTime          = column[LocalDateTime]("CreateTime")
 
@@ -66,6 +66,14 @@ object StudentManagerImpl {
         val query = for {
             student <- studentData if (student.userId === userId)
         } yield (student)
+        db.run(query.result)
+    }
+
+    // Method to get the student address records by userId
+    def getStudentAddress(studentId: Long): Future[Seq[StudentAddress]] = {
+        val query = for {
+            studentAddress <- studentAddressData if (studentAddress.studentId === studentId)
+        } yield (studentAddress)
         db.run(query.result)
     }
 }

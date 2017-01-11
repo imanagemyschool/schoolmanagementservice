@@ -70,7 +70,7 @@ object StudentManagerImpl {
         override def * = (studentId, termCode, subjectCode, totalPercentage, totalGradeMark, gradeTeacherName, lastUpdatedDate, createTime) <> (StudentGrade.tupled, StudentGrade.unapply)
     }
 
-    // Define the SubjectCategoryGrade Table
+    // Define the StudentCategoryGrade Table
     class StudentCategoryGradeTable(tag: Tag) extends Table[StudentCategoryGrade](tag, "studentcategorygrade") {
         def subjectCategoryGradeId  = column[Long]("SubjectCategoryGradeId", O.PrimaryKey)
         def studentId               = column[Long]("StudentId")
@@ -83,7 +83,7 @@ object StudentManagerImpl {
         def categoryItemPercentage  = column[Option[Double]]("CategoryItemPercentage")
         def createTime              = column[LocalDateTime]("CreateTime")
 
-        override def * = (subjectCategoryGradeId, studentId, termCode, subjectCode, subjectCategoryCode, categoryItemDescription, categoryItemType, categoryItemScore, categoryItemPercentage, createTime) <> (SubjectCategoryGrade.tupled, SubjectCategoryGrade.unapply)
+        override def * = (subjectCategoryGradeId, studentId, termCode, subjectCode, subjectCategoryCode, categoryItemDescription, categoryItemType, categoryItemScore, categoryItemPercentage, createTime) <> (StudentCategoryGrade.tupled, StudentCategoryGrade.unapply)
     }
 
     val studentData              = TableQuery[StudentTable]

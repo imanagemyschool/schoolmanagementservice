@@ -14,6 +14,9 @@ GET   /sms/v1/api/school          @controllers.SchoolController.getSchool(school
 GET   /sms/v1/api/students        @controllers.StudentController.getStudents(userId: Long)
 GET   /sms/v1/api/studentaddress  @controllers.StudentController.getStudentAddress(studentId: Long)
 
+GET   /sms/v1/api/studentgrade    @controllers.StudentController.getStudentGrades(studentId: Long)
+GET   /sms/v1/api/studentcategorygrade    @controllers.StudentController.getStudentCategoryGrades(studentId: Long, termCode: String, subjectCode: String)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 

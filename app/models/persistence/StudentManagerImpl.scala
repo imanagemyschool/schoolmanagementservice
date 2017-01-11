@@ -57,9 +57,40 @@ object StudentManagerImpl {
         override def * = (studentAddressId, studentId, address1, address2, city, subCountry, stateCode, provinceCode, countryCode, zip, primaryContactPhoneNumber, secondaryContactPhoneNumber, primaryEmailAddress, secondaryEmailAddress, addressTypeCode, createTime) <> (StudentAddress.tupled, StudentAddress.unapply)
     }
 
-    val studentData        = TableQuery[StudentTable]
-    val studentAddressData = TableQuery[StudentAddressTable]
-    val db                 = Database.forConfig("slicksmservices")
+    class StudentGradeTable(tag: Tag) extends Table[StudentGrade](tag, "studentgrade") {
+        def studentId         = column[Long]("StudentId", O.PrimaryKey)
+        def termCode          = column[String]("TermCode", O.PrimaryKey)
+        def subjectCode       = column[String]("SubjectCode", O.PrimaryKey)
+        def totalPercentage   = column[Option[Double]]("TotalPercentage")
+        def totalGradeMark    = column[Option[String]]("TotalGradeMark")
+        def gradeTeacherName  = column[Option[String]]("GradeTeacherName")
+        def lastUpdatedDate   = column[Option[LocalDateTime]]("LastUpdatedDate")
+        def createTime        = column[LocalDateTime]("CreateTime")
+
+        override def * = (studentId, termCode, subjectCode, totalPercentage, totalGradeMark, gradeTeacherName, lastUpdatedDate, createTime) <> (StudentGrade.tupled, StudentGrade.unapply)
+    }
+
+    // Define the SubjectCategoryGrade Table
+    class StudentCategoryGradeTable(tag: Tag) extends Table[StudentCategoryGrade](tag, "studentcategorygrade") {
+        def subjectCategoryGradeId  = column[Long]("SubjectCategoryGradeId", O.PrimaryKey)
+        def studentId               = column[Long]("StudentId")
+        def termCode                = column[String]("TermCode")
+        def subjectCode             = column[String]("SubjectCode")
+        def subjectCategoryCode     = column[String]("SubjectCategoryCode")
+        def categoryItemDescription = column[Option[String]]("CategoryItemDescription")
+        def categoryItemType        = column[Option[String]]("CategoryItemType")
+        def categoryItemScore       = column[Option[String]]("CategoryItemScore")
+        def categoryItemPercentage  = column[Option[Double]]("CategoryItemPercentage")
+        def createTime              = column[LocalDateTime]("CreateTime")
+
+        override def * = (subjectCategoryGradeId, studentId, termCode, subjectCode, subjectCategoryCode, categoryItemDescription, categoryItemType, categoryItemScore, categoryItemPercentage, createTime) <> (SubjectCategoryGrade.tupled, SubjectCategoryGrade.unapply)
+    }
+
+    val studentData              = TableQuery[StudentTable]
+    val studentAddressData       = TableQuery[StudentAddressTable]
+    val studentGradeData         = TableQuery[StudentGradeTable]
+    val studentCategoryGradeData = TableQuery[StudentCategoryGradeTable]
+    val db                       = Database.forConfig("slicksmservices")
 
     // Method to get the students by userId
     def getStudents(userId: Long): Future[Seq[Student]] = {
@@ -74,6 +105,22 @@ object StudentManagerImpl {
         val query = for {
             studentAddress <- studentAddressData if (studentAddress.studentId === studentId)
         } yield (studentAddress)
+        db.run(query.result)
+    }
+
+    // Method to get the student grades by studentId
+    def getStudentGrades(studentId: Long): Future[Seq[StudentGrade]] = {
+        val query = for {
+            studentGrade <- studentGradeData if (studentGrade.studentId === studentId)
+        } yield (studentGrade)
+        db.run(query.result)
+    }
+
+    // Method to get the student category grades by studentId/termcode/subjectcode
+    def getStudentCategoryGrades(studentId: Long, termCode: String, subjectCode: String): Future[Seq[StudentCategoryGrade]] = {
+        val query = for {
+            studentCategoryGrade <- studentCategoryGradeData if (studentCategoryGrade.studentId === studentId && studentCategoryGrade.termCode === termCode && studentCategoryGrade.subjectCode === subjectCode)
+        } yield (studentCategoryGrade)
         db.run(query.result)
     }
 }

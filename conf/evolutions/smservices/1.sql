@@ -106,3 +106,58 @@ CREATE TABLE IF NOT EXISTS `smservices`.`StudentAddress` (
    CONSTRAINT `studentaddr_stuid_fk` FOREIGN KEY (`StudentId`) REFERENCES `Student` (`StudentId`) ON DELETE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `smservices`.`Subject` (
+  `SubjectCode`          VARCHAR(64)    NOT NULL,
+  `SubjectDescription`   VARCHAR(150)    NOT NULL,
+  `CreateTime`              DATETIME     NOT NULL,
+   PRIMARY KEY (`SubjectCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `smservices`.`Term` (
+  `TermCode`          VARCHAR(64)    NOT NULL,
+  `TermDescription`   VARCHAR(150)    NOT NULL,
+  `CreateTime`        DATETIME     NOT NULL,
+   PRIMARY KEY (`TermCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `smservices`.`SubjectCategory` (
+  `SubjectCategoryCode`          VARCHAR(100)    NOT NULL,
+  `SubjectCategoryDescription`   VARCHAR(150)    NOT NULL,
+  `CreateTime`        DATETIME     NOT NULL,
+   PRIMARY KEY (`SubjectCategoryCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `smservices`.`SubjectGrade` (
+  `StudentId`               Int(20)      NOT NULL,
+  `TermCode`                VARCHAR(100) NOT NULL,
+  `SubjectCode`             VARCHAR(100) NOT NULL,
+  `TotalPercentage`         DECIMAL(4,3),
+  `TotalGradeMark`          VARCHAR(6),
+  `GradeTeacherName`        VARCHAR(100),
+  `LastUpdatedDate`         VARCHAR(64),
+  `CreateTime`              DATETIME     NOT NULL,
+   PRIMARY KEY (`StudentId`,`TermCode`,`SubjectCode`),
+   CONSTRAINT `studentgrade_stuid_fk` FOREIGN KEY (`StudentId`) REFERENCES `Student` (`StudentId`) ON DELETE NO ACTION,
+   CONSTRAINT `studentgrade_subjcode_fk` FOREIGN KEY (`SubjectCode`) REFERENCES `Subject` (`SubjectCode`) ON DELETE NO ACTION,
+   CONSTRAINT `studentgrade_term_fk` FOREIGN KEY (`TermCode`) REFERENCES `Term` (`TermCode`) ON DELETE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `smservices`.`SubjectCategoryGrade` (
+  `SubjectCategoryGradeId`  Int(20)      NOT NULL AUTO_INCREMENT,
+  `StudentId`               Int(20)      NOT NULL,
+  `TermCode`                VARCHAR(100) NOT NULL,
+  `SubjectCode`             VARCHAR(100) NOT NULL,
+  `SubjectCategoryCode`     VARCHAR(100) NOT NULL,
+  `CategoryItemDescription` VARCHAR(256),
+  `CategoryItemType`        VARCHAR(100),
+  `CategoryItemScore`       VARCHAR(32),
+  `CategoryItemPercentage`  DECIMAL(4,3),
+  `CreateTime`              DATETIME     NOT NULL,
+   PRIMARY KEY (`SubjectCategoryGradeId`),
+   CONSTRAINT `studcatgrade_stuid_fk` FOREIGN KEY (`StudentId`) REFERENCES `Student` (`StudentId`) ON DELETE NO ACTION,
+   CONSTRAINT `studcatgrade_subjcode_fk` FOREIGN KEY (`SubjectCode`) REFERENCES `Subject` (`SubjectCode`) ON DELETE NO ACTION,
+   CONSTRAINT `studcatgrade_term_fk` FOREIGN KEY (`TermCode`) REFERENCES `Term` (`TermCode`) ON DELETE NO ACTION,
+   CONSTRAINT `studcatgrade_subjcatcode_fk` FOREIGN KEY (`SubjectCategoryCode`) REFERENCES `SubjectCategory` (`SubjectCategoryCode`) ON DELETE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

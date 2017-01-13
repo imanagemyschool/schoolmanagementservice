@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS `smservices`.`Subject` (
 
 CREATE TABLE IF NOT EXISTS `smservices`.`Term` (
   `TermCode`          VARCHAR(64)    NOT NULL,
-  `TermDescription`   VARCHAR(150)    NOT NULL,
+  `TermDescription`   VARCHAR(150)   NOT NULL,
   `CreateTime`        DATETIME     NOT NULL,
    PRIMARY KEY (`TermCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -127,11 +127,11 @@ CREATE TABLE IF NOT EXISTS `smservices`.`SubjectCategory` (
    PRIMARY KEY (`SubjectCategoryCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `smservices`.`SubjectGrade` (
+CREATE TABLE IF NOT EXISTS `smservices`.`StudentGrade` (
   `StudentId`               Int(20)      NOT NULL,
   `TermCode`                VARCHAR(100) NOT NULL,
   `SubjectCode`             VARCHAR(100) NOT NULL,
-  `TotalPercentage`         DECIMAL(4,3),
+  `TotalPercentage`         DECIMAL(5,2),
   `TotalGradeMark`          VARCHAR(6),
   `GradeTeacherName`        VARCHAR(100),
   `LastUpdatedDate`         VARCHAR(64),
@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `smservices`.`SubjectGrade` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE IF NOT EXISTS `smservices`.`SubjectCategoryGrade` (
+CREATE TABLE IF NOT EXISTS `smservices`.`StudentCategoryGrade` (
   `SubjectCategoryGradeId`  Int(20)      NOT NULL AUTO_INCREMENT,
   `StudentId`               Int(20)      NOT NULL,
   `TermCode`                VARCHAR(100) NOT NULL,

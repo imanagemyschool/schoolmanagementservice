@@ -1,7 +1,7 @@
 package controllers
 
 import models.common.LocalDateTimeFormat
-import models.domain.{StudentCategoryGrade, StudentGrade, StudentAddress, Student}
+import models.domain._
 import models.persistence.StudentManagerImpl
 import org.joda.time.LocalDateTime
 import play.api.libs.json.{Format, Json}
@@ -21,6 +21,9 @@ class StudentController extends Controller{
     implicit val studentAddressFormat       = Json.writes[StudentAddress]
     implicit val studentGradeFormat         = Json.writes[StudentGrade]
     implicit val studentCategoryGradeFormat = Json.writes[StudentCategoryGrade]
+    implicit val termFormat                 = Json.writes[Term]
+    implicit val subjectFormat              = Json.writes[Subject]
+    implicit val subjectCategoryFormat      = Json.writes[SubjectCategory]
 
     def getStudents(userId: Long) = Action.async { implicit request =>
         StudentManagerImpl.getStudents(userId).map(student => Ok(Json.obj("students" -> student)))
@@ -36,5 +39,17 @@ class StudentController extends Controller{
 
     def getStudentCategoryGrades(studentId: Long, termCode: String, subjectCode: String) = Action.async { implicit request =>
         StudentManagerImpl.getStudentCategoryGrades(studentId, termCode, subjectCode).map(studentCategoryGrades => Ok(Json.obj("studentCategoryGrades" -> studentCategoryGrades)))
+    }
+
+    def getTerms() = Action.async { implicit request =>
+        StudentManagerImpl.getTerms().map(terms => Ok(Json.obj("terms" -> terms)))
+    }
+
+    def getSubjects() = Action.async { implicit request =>
+        StudentManagerImpl.getSubjects().map(subjects => Ok(Json.obj("subjects" -> subjects)))
+    }
+
+    def getSubjectCategories() = Action.async { implicit request =>
+        StudentManagerImpl.getSubjectCategories().map(subjectCategories => Ok(Json.obj("subjectCategories" -> subjectCategories)))
     }
 }

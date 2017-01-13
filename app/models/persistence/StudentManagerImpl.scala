@@ -86,10 +86,40 @@ object StudentManagerImpl {
         override def * = (subjectCategoryGradeId, studentId, termCode, subjectCode, subjectCategoryCode, categoryItemDescription, categoryItemType, categoryItemScore, categoryItemPercentage, createTime) <> (StudentCategoryGrade.tupled, StudentCategoryGrade.unapply)
     }
 
+    // Define the Term Table
+    class TermTable(tag: Tag) extends Table[Term](tag, "term") {
+        def termCode         = column[String]("TermCode", O.PrimaryKey)
+        def termDescription  = column[String]("TermDescription")
+        def createTime       = column[LocalDateTime]("CreateTime")
+
+        override def * = (termCode, termDescription, createTime) <> (Term.tupled, Term.unapply)
+    }
+
+    // Define the Subject Table
+    class SubjectTable(tag: Tag) extends Table[Subject](tag, "subject") {
+        def subjectCode         = column[String]("SubjectCode", O.PrimaryKey)
+        def subjectDescription  = column[String]("SubjectDescription")
+        def createTime          = column[LocalDateTime]("CreateTime")
+
+        override def * = (subjectCode, subjectDescription, createTime) <> (Subject.tupled, Subject.unapply)
+    }
+
+    // Define the SubjectCategory Table
+    class SubjectCategoryTable(tag: Tag) extends Table[SubjectCategory](tag, "subjectcategory") {
+        def subjectCategoryCode         = column[String]("SubjectCategoryCode", O.PrimaryKey)
+        def subjectCategoryDescription  = column[String]("SubjectCategoryDescription")
+        def createTime                  = column[LocalDateTime]("CreateTime")
+
+        override def * = (subjectCategoryCode, subjectCategoryDescription, createTime) <> (SubjectCategory.tupled, SubjectCategory.unapply)
+    }
+
     val studentData              = TableQuery[StudentTable]
     val studentAddressData       = TableQuery[StudentAddressTable]
     val studentGradeData         = TableQuery[StudentGradeTable]
     val studentCategoryGradeData = TableQuery[StudentCategoryGradeTable]
+    val termData                 = TableQuery[TermTable]
+    val subjectData              = TableQuery[SubjectTable]
+    val subjectCategoryData      = TableQuery[SubjectCategoryTable]
     val db                       = Database.forConfig("slicksmservices")
 
     // Method to get the students by userId
@@ -121,6 +151,30 @@ object StudentManagerImpl {
         val query = for {
             studentCategoryGrade <- studentCategoryGradeData if (studentCategoryGrade.studentId === studentId && studentCategoryGrade.termCode === termCode && studentCategoryGrade.subjectCode === subjectCode)
         } yield (studentCategoryGrade)
+        db.run(query.result)
+    }
+
+    // Method to get all the Term data
+    def getTerms(): Future[Seq[Term]] = {
+        val query = for {
+            term <- termData.sortBy(_.termCode.desc)
+        } yield (term)
+        db.run(query.result)
+    }
+
+    // Method to get all the Subject data
+    def getSubjects(): Future[Seq[Subject]] = {
+        val query = for {
+            subject <- subjectData.sortBy(_.subjectCode.desc)
+        } yield (subject)
+        db.run(query.result)
+    }
+
+    // Method to get all the SubjectCategory data
+    def getSubjectCategories(): Future[Seq[SubjectCategory]] = {
+        val query = for {
+            subjectCategory <- subjectCategoryData.sortBy(_.subjectCategoryCode.desc)
+        } yield (subjectCategory)
         db.run(query.result)
     }
 }

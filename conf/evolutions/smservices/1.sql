@@ -20,9 +20,12 @@ CREATE TABLE IF NOT EXISTS `smservices`.`UserAttributes` (
 
 
 CREATE TABLE IF NOT EXISTS `smservices`.`UserSchoolInfo` (
-  `UserId`                  Int(20)      NOT NULL,
+  `UserId`                  INT(20)      NOT NULL,
   `SchoolCode`              VARCHAR(64)  NOT NULL,
   `UserTypeCode`            VARCHAR(64)  NOT NULL,
+  `PasswordSalt`            VARCHAR(64)  NOT NULL,
+  `UserToken`               VARCHAR(512),
+  `TokenCreationTime`       VARCHAR(20),
   `CreateTime`              DATETIME     NOT NULL,
    PRIMARY KEY (`UserId`,`SchoolCode`,`UserTypeCode`),
    CONSTRAINT `usrschinfo_userid_fk` FOREIGN KEY (`UserId`) REFERENCES `User` (`UserId`) ON DELETE NO ACTION,
@@ -160,4 +163,5 @@ CREATE TABLE IF NOT EXISTS `smservices`.`StudentCategoryGrade` (
    CONSTRAINT `studcatgrade_term_fk` FOREIGN KEY (`TermCode`) REFERENCES `Term` (`TermCode`) ON DELETE NO ACTION,
    CONSTRAINT `studcatgrade_subjcatcode_fk` FOREIGN KEY (`SubjectCategoryCode`) REFERENCES `SubjectCategory` (`SubjectCategoryCode`) ON DELETE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 

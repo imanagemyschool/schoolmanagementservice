@@ -25,7 +25,7 @@ object UserManagerImpl {
         def activeFlag  = column[Boolean]("ActiveFlag")
         def createTime  = column[LocalDateTime]("CreateTime")
 
-        override def * = (userId, username, activeFlag, createTime) <> (User.tupled, User.unapply)
+        override def * = (userId, username, password, activeFlag, createTime) <> (User.tupled, User.unapply)
     }
 
     // Define the UserSchool Table
@@ -33,9 +33,12 @@ object UserManagerImpl {
         def userId       = column[Long]("UserId", O.PrimaryKey)
         def schoolCode   = column[String]("SchoolCode", O.PrimaryKey)
         def userTypeCode = column[String]("UserTypeCode", O.PrimaryKey)
+        def passwordSalt = column[String]("PasswordSalt")
+        def userToken    = column[Option[String]]("UserToken")
+        def tokenCreationTime = column[Option[String]]("TokenCreationTime")
         def createTime   = column[LocalDateTime]("CreateTime")
 
-        override def * = (userId, schoolCode, userTypeCode, createTime) <> (UserSchool.tupled, UserSchool.unapply)
+        override def * = (userId, schoolCode, userTypeCode, passwordSalt, userToken, tokenCreationTime, createTime) <> (UserSchool.tupled, UserSchool.unapply)
     }
 
     val userData       = TableQuery[UserTable]
@@ -56,4 +59,18 @@ object UserManagerImpl {
         } yield (userSchool)
         db.run(query.result)
     }
+
+    // Method to get the User record by username
+    def getUserSchool(userId: Long, schoolCode: String): Future[Option[UserSchool]] = {
+        val query = userSchoolData.filter(userSchool => userSchool.userId === userId && userSchool.schoolCode === schoolCode)
+        val action = query.result.headOption
+        db.run(action)
+    }
+
+    // This method will set the user token & token creation time for the logged in user
+    def updateUserWithToken(userToken: String, userId: Long, schoolCode: String, userTypeCode: String) = {
+        val q = for { c <- userSchoolData if c.userId === userId && c.schoolCode === schoolCode && c.userTypeCode === userTypeCode} yield (c.userToken.get, c.tokenCreationTime.get)
+        db.run(q.update(userToken, System.currentTimeMillis().toString))
+    }
+
 }

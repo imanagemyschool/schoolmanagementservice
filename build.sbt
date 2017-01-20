@@ -11,7 +11,7 @@ version := {
     pattern.findAllIn(version).matchData.map(m => m.group(1)).toList.head
 }
 
-val sVersion = "2.11.7"
+val sVersion = "2.11.8"
 
 scalaVersion := sVersion
 
@@ -24,14 +24,15 @@ val mysqlDriver   = "mysql" % "mysql-connector-java" % "5.1.35"
 val scalaJodaTime = "com.github.nscala-time" %% "nscala-time" % "2.0.0"
 val jodaTime      = "joda-time" % "joda-time" % "2.7"
 val jodaConvert   = "org.joda" % "joda-convert" % "1.7"
-val hikariCP = "com.edulify" %% "play-hikaricp" % "1.5.1" //hikari coonection pool
+val hikariCP = "com.edulify" %% "play-hikaricp" % "2.0.6" //hikari coonection pool
 val jodaSlick = "com.github.tototoshi" %% "slick-joda-mapper" % "2.2.0" //Slick joda-time mapper
 val slickHikariCP = "com.typesafe.slick" %% "slick-hikaricp" % "3.1.0"
 val commonsIO     = "commons-io" % "commons-io" % "2.4"
 val commonsNet    = "commons-net" % "commons-net" % "3.3"
 val json4sJackson = "org.json4s" %% "json4s-jackson" % "3.4.1"
+val mindrot       = "org.mindrot" % "jbcrypt" % "0.3m" //java bcrypt hash
 
-libraryDependencies ++= Seq(amazonWebServicesSDK, jdbc, anorm24, evolutions, slick, jodaSlick, filters, slickHikariCP, jodaConvert, cache, javaJdbc, scalaJodaTime, jodaTime, mysqlDriver, ws, hikariCP, commonsIO, commonsNet, json4sJackson)
+libraryDependencies ++= Seq(amazonWebServicesSDK, jdbc, anorm24, evolutions, slick, jodaSlick, filters, slickHikariCP, jodaConvert, cache, javaJdbc, scalaJodaTime, jodaTime, mysqlDriver, ws, hikariCP, commonsIO, commonsNet, json4sJackson, mindrot)
 
 unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )  
 

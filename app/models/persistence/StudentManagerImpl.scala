@@ -113,6 +113,22 @@ object StudentManagerImpl {
         override def * = (subjectCategoryCode, subjectCategoryDescription, createTime) <> (SubjectCategory.tupled, SubjectCategory.unapply)
     }
 
+    // Define the StudentAttendance Table
+    class StudentAttendanceTable(tag: Tag) extends Table[StudentAttendance](tag, "studentattendance") {
+        def studentAttendanceId  = column[Long]("StudentAttendanceId", O.PrimaryKey)
+        def studentId            = column[Long]("StudentId")
+        def attendanceDate       = column[LocalDateTime]("AttendanceDate")
+        def presentFlag          = column[Boolean]("PresentFlag")
+        def excusedFlag          = column[Boolean]("ExcusedFlag")
+        def unexcusedFlag        = column[Boolean]("UnexcusedFlag")
+        def tardyFlag            = column[Boolean]("TardyFlag")
+        def truancyFlag          = column[Boolean]("TruancyFlag")
+        def suspendedFlag        = column[Boolean]("SuspendedFlag")
+        def createTime           = column[LocalDateTime]("CreateTime")
+
+        override def * = (studentAttendanceId, studentId, attendanceDate, presentFlag, excusedFlag, unexcusedFlag, tardyFlag, truancyFlag, suspendedFlag, createTime) <> (StudentAttendance.tupled, StudentAttendance.unapply)
+    }
+
     val studentData              = TableQuery[StudentTable]
     val studentAddressData       = TableQuery[StudentAddressTable]
     val studentGradeData         = TableQuery[StudentGradeTable]
@@ -120,6 +136,7 @@ object StudentManagerImpl {
     val termData                 = TableQuery[TermTable]
     val subjectData              = TableQuery[SubjectTable]
     val subjectCategoryData      = TableQuery[SubjectCategoryTable]
+    val studentAttendanceData    = TableQuery[StudentAttendanceTable]
     val db                       = Database.forConfig("slicksmservices")
 
     // Method to get the students by userId
@@ -175,6 +192,14 @@ object StudentManagerImpl {
         val query = for {
             subjectCategory <- subjectCategoryData.sortBy(_.subjectCategoryCode.desc)
         } yield (subjectCategory)
+        db.run(query.result)
+    }
+
+    // Method to get all the StudentAttendance data
+    def getStudentAttendances(studentId: Long): Future[Seq[StudentAttendance]] = {
+        val query = for {
+            studentAttendance <- studentAttendanceData if (studentAttendance.studentId === studentId)
+        } yield (studentAttendance)
         db.run(query.result)
     }
 }

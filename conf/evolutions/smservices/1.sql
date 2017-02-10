@@ -165,3 +165,16 @@ CREATE TABLE IF NOT EXISTS `smservices`.`StudentCategoryGrade` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+CREATE TABLE IF NOT EXISTS `smservices`.`StudentAttendance` (
+  `StudentAttendanceId`     Int(20)      NOT NULL AUTO_INCREMENT,
+  `StudentId`               Int(20)      NOT NULL,
+  `AttendanceDate`          DATETIME     NOT NULL,
+  `PresentFlag`             INT(1)       NOT NULL,
+  `ExcusedFlag`             INT(1)       NOT NULL,
+  `UnexcusedFlag`           INT(1)       NOT NULL,
+  `TardyFlag`               INT(1)       NOT NULL,
+  `TruancyFlag`             INT(1)       NOT NULL,
+  `SuspendedFlag`           INT(1)       NOT NULL,
+  `CreateTime`              DATETIME     NOT NULL,
+   PRIMARY KEY (`StudentAttendanceId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

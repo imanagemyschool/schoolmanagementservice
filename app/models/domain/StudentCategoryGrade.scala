@@ -5,7 +5,7 @@ import org.joda.time.LocalDateTime
 /**
   * Created by anil.mathew on 1/10/2017.
   */
-case class StudentCategoryGrade (subjectCategoryGradeId: Long,
+case class StudentCategoryGrade (studentCategoryGradeId: Long,
                             studentId: Long,
                             termCode: String,
                             subjectCode: String,

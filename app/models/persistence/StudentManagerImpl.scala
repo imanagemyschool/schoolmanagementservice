@@ -72,7 +72,7 @@ object StudentManagerImpl {
 
     // Define the StudentCategoryGrade Table
     class StudentCategoryGradeTable(tag: Tag) extends Table[StudentCategoryGrade](tag, "studentcategorygrade") {
-        def subjectCategoryGradeId  = column[Long]("SubjectCategoryGradeId", O.PrimaryKey)
+        def studentCategoryGradeId  = column[Long]("StudentCategoryGradeId", O.PrimaryKey)
         def studentId               = column[Long]("StudentId")
         def termCode                = column[String]("TermCode")
         def subjectCode             = column[String]("SubjectCode")
@@ -83,7 +83,7 @@ object StudentManagerImpl {
         def categoryItemPercentage  = column[Option[Double]]("CategoryItemPercentage")
         def createTime              = column[LocalDateTime]("CreateTime")
 
-        override def * = (subjectCategoryGradeId, studentId, termCode, subjectCode, subjectCategoryCode, categoryItemDescription, categoryItemType, categoryItemScore, categoryItemPercentage, createTime) <> (StudentCategoryGrade.tupled, StudentCategoryGrade.unapply)
+        override def * = (studentCategoryGradeId, studentId, termCode, subjectCode, subjectCategoryCode, categoryItemDescription, categoryItemType, categoryItemScore, categoryItemPercentage, createTime) <> (StudentCategoryGrade.tupled, StudentCategoryGrade.unapply)
     }
 
     // Define the Term Table

@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `smservices`.`StudentGrade` (
 
 
 CREATE TABLE IF NOT EXISTS `smservices`.`StudentCategoryGrade` (
-  `SubjectCategoryGradeId`  Int(20)      NOT NULL AUTO_INCREMENT,
+  `StudentCategoryGradeId`  Int(20)      NOT NULL AUTO_INCREMENT,
   `StudentId`               Int(20)      NOT NULL,
   `TermCode`                VARCHAR(100) NOT NULL,
   `SubjectCode`             VARCHAR(100) NOT NULL,
@@ -155,9 +155,9 @@ CREATE TABLE IF NOT EXISTS `smservices`.`StudentCategoryGrade` (
   `CategoryItemDescription` VARCHAR(256),
   `CategoryItemType`        VARCHAR(100),
   `CategoryItemScore`       VARCHAR(32),
-  `CategoryItemPercentage`  DECIMAL(4,3),
+  `CategoryItemPercentage`  DECIMAL(5,2),
   `CreateTime`              DATETIME     NOT NULL,
-   PRIMARY KEY (`SubjectCategoryGradeId`),
+   PRIMARY KEY (`StudentCategoryGradeId`),
    CONSTRAINT `studcatgrade_stuid_fk` FOREIGN KEY (`StudentId`) REFERENCES `Student` (`StudentId`) ON DELETE NO ACTION,
    CONSTRAINT `studcatgrade_subjcode_fk` FOREIGN KEY (`SubjectCode`) REFERENCES `Subject` (`SubjectCode`) ON DELETE NO ACTION,
    CONSTRAINT `studcatgrade_term_fk` FOREIGN KEY (`TermCode`) REFERENCES `Term` (`TermCode`) ON DELETE NO ACTION,

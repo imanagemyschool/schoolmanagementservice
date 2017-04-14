@@ -5,12 +5,12 @@
 # Home page
 GET   /about                      @controllers.HomeController.about
 
-GET   /sms/v1/api/user            @controllers.LoginController.getUser(username: Option[String])
-GET   /sms/v1/api/userschool      @controllers.LoginController.getUserSchool(userId: Option[Long])
-POST  /sms/v1/api/authenticate    @controllers.LoginController.authenticateUser
+GET   /sms/v1/api/user            @controllers.UserController.getUser(username: Option[String])
+GET   /sms/v1/api/userschool      @controllers.UserController.getUserSchool(userId: Option[Long])
+POST  /sms/v1/api/authenticate    @controllers.UserController.authenticateUser
+GET   /sms/v1/api/roleattributes  @controllers.UserController.getUserRoleAttributes(userId: Long)
 
 GET   /sms/v1/api/school          @controllers.SchoolController.getSchool(schoolCode: String)
-
 GET   /sms/v1/api/students        @controllers.StudentController.getStudents(userId: Long)
 GET   /sms/v1/api/studentaddress  @controllers.StudentController.getStudentAddress(studentId: Long)
 

@@ -178,3 +178,36 @@ CREATE TABLE IF NOT EXISTS `smservices`.`StudentAttendance` (
   `CreateTime`              DATETIME     NOT NULL,
    PRIMARY KEY (`StudentAttendanceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `smservices`.`Role` (
+  `RoleName`                VARCHAR(100)  NOT NULL,
+  `RoleDescription`         VARCHAR(256)  NOT NULL,
+  `CreateTime`              DATETIME     NOT NULL,
+   PRIMARY KEY (`RoleName`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `smservices`.`Attribute` (
+  `AttributeName`        VARCHAR(100)  NOT NULL,
+  `AttributeDescription` VARCHAR(256)  NOT NULL,
+  `CreateTime`           DATETIME     NOT NULL,
+   PRIMARY KEY (`AttributeName`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `smservices`.`RoleAttribute` (
+  `RoleName`             VARCHAR(100)  NOT NULL,
+  `AttributeName`        VARCHAR(100)  NOT NULL,
+  `CreateTime`           DATETIME     NOT NULL,
+   PRIMARY KEY (`RoleName`,`AttributeName`),
+   CONSTRAINT `roleattr_rolename_fk` FOREIGN KEY (`RoleName`) REFERENCES `Role` (`RoleName`) ON DELETE NO ACTION,
+   CONSTRAINT `roleattr_attrname_fk` FOREIGN KEY (`AttributeName`) REFERENCES `Attribute` (`AttributeName`) ON DELETE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `smservices`.`UserRole` (
+  `UserId`       INT(20)      NOT NULL,
+  `RoleName`     VARCHAR(100) NOT NULL,
+  `CreateTime`   DATETIME     NOT NULL,
+   PRIMARY KEY (`UserId`,`RoleName`),
+   CONSTRAINT `userrole_userid_fk` FOREIGN KEY (`UserId`) REFERENCES `User` (`UserId`) ON DELETE NO ACTION,
+   CONSTRAINT `userrole_rolename_fk` FOREIGN KEY (`RoleName`) REFERENCES `Role` (`RoleName`) ON DELETE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

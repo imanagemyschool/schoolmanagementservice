@@ -1,6 +1,6 @@
 package models.persistence
 
-import models.domain.{UserLoginInfo, School, UserSchool, User}
+import models.domain._
 import org.joda.time.{LocalDateTime}
 import play.api.Logger
 import slick.driver.MySQLDriver.api._
@@ -41,8 +41,48 @@ object UserManagerImpl {
         override def * = (userId, schoolCode, userTypeCode, passwordSalt, userToken, tokenCreationTime, createTime) <> (UserSchool.tupled, UserSchool.unapply)
     }
 
+    // Define the Role Table
+    class RoleTable(tag: Tag) extends Table[Role](tag, "role") {
+        def roleName        = column[String]("RoleName", O.PrimaryKey)
+        def roleDescription = column[String]("RoleDescription")
+        def createTime      = column[LocalDateTime]("CreateTime")
+
+        override def * = (roleName, roleDescription, createTime) <> (Role.tupled, Role.unapply)
+    }
+
+    // Define the Attribute Table
+    class AttributeTable(tag: Tag) extends Table[Attribute](tag, "attribute") {
+        def attributeName        = column[String]("AttributeName", O.PrimaryKey)
+        def attributeDescription = column[String]("AttributeDescription")
+        def createTime           = column[LocalDateTime]("CreateTime")
+
+        override def * = (attributeName, attributeDescription, createTime) <> (Attribute.tupled, Attribute.unapply)
+    }
+
+    // Define the RoleAttribute Table
+    class RoleAttributeTable(tag: Tag) extends Table[RoleAttribute](tag, "roleattribute") {
+        def roleName       = column[String]("RoleName", O.PrimaryKey)
+        def attributeName  = column[String]("AttributeName", O.PrimaryKey)
+        def createTime     = column[LocalDateTime]("CreateTime")
+
+        override def * = (roleName, attributeName, createTime) <> (RoleAttribute.tupled, RoleAttribute.unapply)
+    }
+
+    // Define the UserRole Table
+    class UserRoleTable(tag: Tag) extends Table[UserRole](tag, "userrole") {
+        def userId      = column[Long]("UserId", O.PrimaryKey)
+        def roleName    = column[String]("RoleName", O.PrimaryKey)
+        def createTime  = column[LocalDateTime]("CreateTime")
+
+        override def * = (userId, roleName, createTime) <> (UserRole.tupled, UserRole.unapply)
+    }
+
     val userData       = TableQuery[UserTable]
     val userSchoolData = TableQuery[UserSchoolTable]
+    val roleData       = TableQuery[RoleTable]
+    val attributeData  = TableQuery[AttributeTable]
+    val roleAttributeData  = TableQuery[RoleAttributeTable]
+    val userRoleData   = TableQuery[UserRoleTable]
     val db             = Database.forConfig("slicksmservices")
 
     // Method to get the User record by username
@@ -73,4 +113,11 @@ object UserManagerImpl {
         db.run(q.update(userToken, System.currentTimeMillis().toString))
     }
 
+    // Method to get the User roles by UserId
+    def getUserRoleAttributes(userId: Long): Future[Seq[RoleAttribute]] = {
+        val query = for {
+            (c, s) <- userRoleData.filter(_.userId === userId) join roleAttributeData on (_.roleName === _.roleName)
+        } yield (s)
+        db.run(query.result)
+    }
 }

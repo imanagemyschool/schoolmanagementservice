@@ -2,26 +2,26 @@ package controllers
 
 import exception.{ErrorInfo, ServiceErrorKeys, ServiceException}
 import models.common.LocalDateTimeFormat
-import models.domain.{School, UserSchool, User, UserLoginInfo}
-import models.persistence.{SchoolManagerImpl, UserManagerImpl}
+import models.domain._
+import models.persistence.{UserManagerImpl}
 import org.joda.time.LocalDateTime
-import play.api.{Play, Logger}
 import play.api.libs.json.{JsString, Format, Json}
 import play.api.mvc.{Action, Controller}
 
-import java.security.SecureRandom
-import scala.util.{Right, Random}
+
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 /**
-  * Created by anil.mathew on 11/12/2016.
+  * Created by anil.mathew on 4/14/2017.
   */
-class LoginController extends Controller {
+class UserController extends Controller {
+
     implicit val jodaTimeFormat: Format[LocalDateTime] = LocalDateTimeFormat.ldtISOFormat
     implicit val userLoginInfoFormat  = Json.writes[UserLoginInfo]
     implicit val userSchoolFormat     = Json.writes[UserSchool]
     implicit val userFormat           = Json.writes[User]
     implicit val schoolFormat         = Json.writes[School]
+    implicit val roleAttributeFormat  = Json.writes[RoleAttribute]
 
     def getUser(username: Option[String]) = Action.async { implicit request =>
         UserManagerImpl.getUserByUsername(username.getOrElse("")).map(user => {
@@ -73,6 +73,11 @@ class LoginController extends Controller {
                 }
             })
         })
+    }
+
+    // This API will return all the role attributes for the passed userId
+    def getUserRoleAttributes(userId: Long) = Action.async { implicit request =>
+        UserManagerImpl.getUserRoleAttributes(userId).map(roleAttribute => Ok(Json.obj("roleAttributes" -> roleAttribute)))
     }
 
 }

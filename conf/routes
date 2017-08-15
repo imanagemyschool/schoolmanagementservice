@@ -20,6 +20,8 @@ GET   /sms/v1/api/term              @controllers.StudentController.getTerms()
 GET   /sms/v1/api/subject           @controllers.StudentController.getSubjects()
 GET   /sms/v1/api/subjectcategory   @controllers.StudentController.getSubjectCategories()
 GET   /sms/v1/api/studentattendance @controllers.StudentController.getStudentAttendances(studentId: Long)
+GET   /sms/v1/api/studentfee        @controllers.StudentController.getStudentFees(studentId: Long)
+GET   /sms/v1/api/feetype           @controllers.SchoolController.getFeeType(feeTypeCode: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

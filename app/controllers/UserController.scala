@@ -56,13 +56,17 @@ class UserController extends Controller {
         val password     = (request.body \ "password").as[String]
         val schoolCode   = (request.body \ "schoolCode").as[String]
         val userTypeCode = (request.body \ "userTypeCode").as[String]
-
+        println("authenticateUser1")
         UserManagerImpl.getUserByUsername(username).flatMap(user => {
+            println("authenticateUser2")
             UserManagerImpl.getUserSchool(user.get.userId, schoolCode).map(userSchool =>{
+                println("authenticateUser3")
                 val pwdHash = password.salt(userSchool.get.passwordSalt).sha256.hex
                 if(!pwdHash.equalsIgnoreCase(user.get.password)){
+                    println("authenticateUser4")
                     Status(INTERNAL_SERVER_ERROR)(ErrorInfo(ServiceErrorKeys.UNABLE_TO_AUTHENTICATE_ERROR_CODE, ServiceErrorKeys.UNABLE_TO_AUTHENTICATE_ERROR_MSG).toJson)
                 }else{
+                    println("authenticateUser5")
                     val userToken = java.util.UUID.randomUUID().toString
                     UserManagerImpl.updateUserWithToken(userToken, user.get.userId, schoolCode, userTypeCode)
                     Ok(Json.obj("user" -> Json.obj(

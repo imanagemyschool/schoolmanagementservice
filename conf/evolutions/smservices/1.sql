@@ -77,6 +77,7 @@ CREATE TABLE IF NOT EXISTS `smservices`.`Student` (
   `LastName`                VARCHAR(50)  NOT NULL,
   `Gender`                  VARCHAR(1)   NOT NULL,
   `DateOfBirth`             VARCHAR(32)  NOT NULL,
+  `PlaceOfBirth`            VARCHAR(32)  NOT NULL,
   `SchoolAdmissionDate`     VARCHAR(32)  NOT NULL,
   `SchoolLeavingDate`       VARCHAR(32),
   `ParentFullName`          VARCHAR(100),
@@ -210,4 +211,22 @@ CREATE TABLE IF NOT EXISTS `smservices`.`UserRole` (
    PRIMARY KEY (`UserId`,`RoleName`),
    CONSTRAINT `userrole_userid_fk` FOREIGN KEY (`UserId`) REFERENCES `User` (`UserId`) ON DELETE NO ACTION,
    CONSTRAINT `userrole_rolename_fk` FOREIGN KEY (`RoleName`) REFERENCES `Role` (`RoleName`) ON DELETE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `smservices`.`FeeType` (
+  `FeeTypeCode`        VARCHAR(100) NOT NULL,
+  `FeeTypeDescription` VARCHAR(100) NOT NULL,
+  `FeeAmount`          VARCHAR(100) NOT NULL,
+  `CreateTime`         DATETIME     NOT NULL,
+   PRIMARY KEY (`FeeTypeCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `smservices`.`StudentFee` (
+  `StudentId`    INT(20)      NOT NULL,
+  `FeeTypeCode`  VARCHAR(100) NOT NULL,
+  `CreateTime`   DATETIME     NOT NULL,
+   PRIMARY KEY (`StudentId`,`FeeTypeCode`),
+   CONSTRAINT `studentfee_feetypecode_fk` FOREIGN KEY (`FeeTypeCode`) REFERENCES `FeeType` (`FeeTypeCode`) ON DELETE NO ACTION,
+   CONSTRAINT `studentfee_studentid_fk` FOREIGN KEY (`StudentId`) REFERENCES `Student` (`StudentId`) ON DELETE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

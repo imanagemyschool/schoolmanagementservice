@@ -129,6 +129,15 @@ object StudentManagerImpl {
         override def * = (studentAttendanceId, studentId, attendanceDate, presentFlag, excusedFlag, unexcusedFlag, tardyFlag, truancyFlag, suspendedFlag, createTime) <> (StudentAttendance.tupled, StudentAttendance.unapply)
     }
 
+    // Define the StudentFee Table
+    class StudentFeeTable(tag: Tag) extends Table[StudentFee](tag, "studentfee") {
+        def studentId   = column[Long]("StudentId", O.PrimaryKey)
+        def feeTypeCode = column[String]("FeeTypeCode", O.PrimaryKey)
+        def createTime  = column[LocalDateTime]("CreateTime")
+
+        override def * = (studentId, feeTypeCode, createTime) <> (StudentFee.tupled, StudentFee.unapply)
+    }
+
     val studentData              = TableQuery[StudentTable]
     val studentAddressData       = TableQuery[StudentAddressTable]
     val studentGradeData         = TableQuery[StudentGradeTable]
@@ -137,6 +146,7 @@ object StudentManagerImpl {
     val subjectData              = TableQuery[SubjectTable]
     val subjectCategoryData      = TableQuery[SubjectCategoryTable]
     val studentAttendanceData    = TableQuery[StudentAttendanceTable]
+    val studentFeeData           = TableQuery[StudentFeeTable]
     val db                       = Database.forConfig("slicksmservices")
 
     // Method to get the students by userId
@@ -200,6 +210,14 @@ object StudentManagerImpl {
         val query = for {
             studentAttendance <- studentAttendanceData if (studentAttendance.studentId === studentId)
         } yield (studentAttendance)
+        db.run(query.result)
+    }
+
+    // Method to get all the fee data
+    def getStudentFees(studentId: Long): Future[Seq[StudentFee]] = {
+        val query = for {
+            studentFee <- studentFeeData if (studentFee.studentId === studentId)
+        } yield (studentFee)
         db.run(query.result)
     }
 }

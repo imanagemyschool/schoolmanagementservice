@@ -1,6 +1,6 @@
 package models.persistence
 
-import models.domain.{School, UserSchool, User}
+import models.domain.{FeeType, School, UserSchool, User}
 import org.joda.time.{LocalDateTime}
 import play.api.Logger
 import slick.driver.MySQLDriver.api._
@@ -37,7 +37,17 @@ object SchoolManagerImpl {
         override def * = (schoolCode, schoolName, districtCode, address1, address2, city, subCountry, stateCode, provinceCode, countryCode, zip, phoneNumber, emailAddress, createTime) <> (School.tupled, School.unapply)
     }
 
+    class FeeTypeTable(tag: Tag) extends Table[FeeType](tag, "feetype") {
+        def feeTypeCode        = column[String]("FeeTypeCode", O.PrimaryKey)
+        def feeTypeDescription = column[String]("FeeTypeDescription")
+        def feeAmount          = column[String]("FeeAmount")
+        def createTime         = column[LocalDateTime]("CreateTime")
+
+        override def * = (feeTypeCode, feeTypeDescription, feeAmount, createTime) <> (FeeType.tupled, FeeType.unapply)
+    }
+
     val schoolData     = TableQuery[SchoolTable]
+    val feeTypeData    = TableQuery[FeeTypeTable]
     val db             = Database.forConfig("slicksmservices")
 
     // Method to get the User record by username
@@ -47,4 +57,10 @@ object SchoolManagerImpl {
         db.run(action)
     }
 
+    // Method to get the FeeType record based on feeTypeCode
+    def getFeeType(feeTypeCode: String): Future[Option[FeeType]] = {
+        val query = feeTypeData.filter(feeType => feeType.feeTypeCode === feeTypeCode)
+        val action = query.result.headOption
+        db.run(action)
+    }
 }

@@ -25,6 +25,7 @@ class StudentController extends Controller{
     implicit val subjectFormat              = Json.writes[Subject]
     implicit val subjectCategoryFormat      = Json.writes[SubjectCategory]
     implicit val studentAttendanceFormat    = Json.writes[StudentAttendance]
+    implicit val studentFeeFormat           = Json.writes[StudentFee]
 
     def getStudents(userId: Long) = Action.async { implicit request =>
         StudentManagerImpl.getStudents(userId).map(student => Ok(Json.obj("students" -> student)))
@@ -56,5 +57,9 @@ class StudentController extends Controller{
 
     def getStudentAttendances(studentId: Long) = Action.async { implicit request =>
         StudentManagerImpl.getStudentAttendances(studentId).map(studentAttendances => Ok(Json.obj("studentAttendances" -> studentAttendances)))
+    }
+
+    def getStudentFees(studentId: Long) = Action.async { implicit request =>
+        StudentManagerImpl.getStudentFees(studentId).map(studentFees => Ok(Json.obj("studentFees" -> studentFees)))
     }
 }

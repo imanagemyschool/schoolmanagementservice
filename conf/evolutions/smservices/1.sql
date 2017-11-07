@@ -19,20 +19,6 @@ CREATE TABLE IF NOT EXISTS `smservices`.`UserAttributes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE IF NOT EXISTS `smservices`.`UserSchoolInfo` (
-  `UserId`                  INT(20)      NOT NULL,
-  `SchoolCode`              VARCHAR(64)  NOT NULL,
-  `UserTypeCode`            VARCHAR(64)  NOT NULL,
-  `PasswordSalt`            VARCHAR(64)  NOT NULL,
-  `UserToken`               VARCHAR(512),
-  `TokenCreationTime`       VARCHAR(20),
-  `CreateTime`              DATETIME     NOT NULL,
-   PRIMARY KEY (`UserId`,`SchoolCode`,`UserTypeCode`),
-   CONSTRAINT `usrschinfo_userid_fk` FOREIGN KEY (`UserId`) REFERENCES `User` (`UserId`) ON DELETE NO ACTION,
-   CONSTRAINT `usrschinfo_schoolcode_fk` FOREIGN KEY (`SchoolCode`) REFERENCES `School` (`SchoolCode`) ON DELETE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
 CREATE TABLE IF NOT EXISTS `smservices`.`SchoolDistrict` (
   `DistrictCode`            VARCHAR(64)    NOT NULL,
   `DistrictName`            VARCHAR(100)   NOT NULL,
@@ -49,6 +35,7 @@ CREATE TABLE IF NOT EXISTS `smservices`.`SchoolDistrict` (
   `CreateTime`              DATETIME       NOT NULL,
    PRIMARY KEY (`DistrictCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE IF NOT EXISTS `smservices`.`School` (
   `SchoolCode`              VARCHAR(64)   NOT NULL,
@@ -67,6 +54,19 @@ CREATE TABLE IF NOT EXISTS `smservices`.`School` (
   `CreateTime`              DATETIME      NOT NULL,
    PRIMARY KEY (`SchoolCode`),
    CONSTRAINT `school_districtcode_fk` FOREIGN KEY (`DistrictCode`) REFERENCES `SchoolDistrict` (`DistrictCode`) ON DELETE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `smservices`.`UserSchoolInfo` (
+  `UserId`                  INT(20)      NOT NULL,
+  `SchoolCode`              VARCHAR(64)  NOT NULL,
+  `UserTypeCode`            VARCHAR(64)  NOT NULL,
+  `PasswordSalt`            VARCHAR(64)  NOT NULL,
+  `UserToken`               VARCHAR(512),
+  `TokenCreationTime`       VARCHAR(20),
+  `CreateTime`              DATETIME     NOT NULL,
+   PRIMARY KEY (`UserId`,`SchoolCode`,`UserTypeCode`),
+   CONSTRAINT `usrschinfo_userid_fk` FOREIGN KEY (`UserId`) REFERENCES `User` (`UserId`) ON DELETE NO ACTION,
+   CONSTRAINT `usrschinfo_schoolcode_fk` FOREIGN KEY (`SchoolCode`) REFERENCES `School` (`SchoolCode`) ON DELETE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `smservices`.`Student` (

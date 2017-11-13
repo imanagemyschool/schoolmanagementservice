@@ -59,6 +59,7 @@ debianControlScriptsDirectory <<= sourceDirectory apply (_ / "debian")
 
 bashScriptExtraDefines += """
                             |addJava -Dlogger.resource=application-logger.xml
+                            |addJava -Ddb.smservices.endpoint=smsdb.cmx8dineds93.us-east-1.rds.amazonaws.com:3306
                             |addJava -XX:ErrorFile=/var/log/java/java_error%p.log
                             |addJava -XX:+HeapDumpOnOutOfMemoryError
                             |addJava -XX:HeapDumpPath=/var/log/java/oom
